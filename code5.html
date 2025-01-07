@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Business Case Code Examples</title>
+</head>
+<body>
+
+  <h1>Business Case 4: </h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+struct Edge {
+    int to;
+    int weight;
+};
+
+struct Compare {
+    bool operator()(const pair<int, int>& a, const pair<int, int>& b) {
+        return a.second > b.second;  // Priority queue: smallest weight first
+    }
+};
+
+class UtilityNetwork {
+public:
+    vector<vector<Edge>> adjList;
+    int n;  // Number of nodes in the graph
+
+    UtilityNetwork(int nodes) {
+        n = nodes;
+        adjList.resize(n);
+    }
+
+    // Add an undirected edge to the graph (both directions)
+    void addEdge(int u, int v, int weight) {
+        adjList[u].push_back({v, weight});
+        adjList[v].push_back({u, weight});
+    }
+
+    // Prim's algorithm to find the MST starting from the source node
+    int primMST(int source) {
+        vector<int> key(n, INT_MAX);  // Minimum weight to connect to MST
+        vector<bool> inMST(n, false); // Track which nodes are in the MST
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Compare> pq;  // Min-heap to pick the minimum weight edge
+
+        // Initialize the source node
+        pq.push({source, 0});
+        key[source] = 0;
+        int mstWeight = 0;
+
+        while (!pq.empty()) {
+            // Get the node with the minimum key value
+            int u = pq.top().first;
+            pq.pop();
+
+            if (inMST[u]) continue;  // Skip nodes already included in the MST
+
+            // Include node u in the MST
+            inMST[u] = true;
+            mstWeight += key[u];  // Add the weight of the node to the MST's total weight
+
+            // Update the adjacent nodes
+            for (auto& edge : adjList[u]) {
+                int v = edge.to;
+                int weight = edge.weight;
+
+                // If the node v is not in the MST and the edge weight is smaller than the current key value, update it
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    pq.push({v, key[v]});
+                }
+            }
+        }
+        return mstWeight;  // Return the total weight of the MST
+    }
+};
+
+int main() {
+    // Example: Utility Network with 6 nodes (key buildings) and weighted edges (distances or costs)
+    int numNodes = 6;
+    UtilityNetwork network(numNodes);
+
+    // Add edges: (u, v, weight)
+    network.addEdge(0, 1, 4);
+    network.addEdge(0, 2, 3);
+    network.addEdge(1, 2, 1);
+    network.addEdge(1, 3, 2);
+    network.addEdge(2, 3, 4);
+    network.addEdge(3, 4, 2);
+    network.addEdge(4, 5, 6);
+    network.addEdge(3, 5, 3);
+
+    // Source node (e.g., power station or water plant)
+    int source = 0;
+
+    // Compute the MST starting from the source node
+    int mstWeight = network.primMST(source);
+
+    // Output the total weight of the MST (minimum cost to connect all buildings)
+    cout << "Total weight of the Minimum Spanning Tree (MST) is: " << mstWeight << endl;
+
+    return 0;
+}
+  </code></pre>
+
+  <h1>Case 7:</h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class UnionFind {
+private:
+    vector<int> parent;
+    vector<int> rank;
+
+public:
+    // Initialize Union-Find structure for n elements
+    UnionFind(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+
+        // Initially, each zone is its own parent (disjoint sets)
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    // Find the representative (root) of the set containing zone x
+    int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]); // Path compression
+        }
+        return parent[x];
+    }
+
+    // Union the sets containing x and y
+    void unionSets(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        // If they are in the same set, do nothing
+        if (rootX != rootY) {
+            // Union by rank (or size)
+            if (rank[rootX] > rank[rootY]) {
+                parent[rootY] = rootX;
+            } else if (rank[rootX] < rank[rootY]) {
+                parent[rootX] = rootY;
+            } else {
+                parent[rootY] = rootX;
+                rank[rootX]++; // Increase rank if both roots are equal
+            }
+        }
+    }
+
+    // Check if two zones are connected (i.e., in the same set)
+    bool areConnected(int x, int y) {
+        return find(x) == find(y);
+    }
+};
+
+int main() {
+    // Number of zones (nodes)
+    int numZones = 6;
+    // Roads connecting the zones as edges
+    vector<pair<int, int>> roads = {
+        {0, 1}, {1, 2}, {3, 4}, {2, 3}, {5, 4}
+    };
+
+    UnionFind uf(numZones);
+
+    // Merge zones based on roads
+    for (auto& road : roads) {
+        int zone1 = road.first;
+        int zone2 = road.second;
+        uf.unionSets(zone1, zone2);
+    }
+
+    // Check if zones are connected
+    cout << "Checking connectivity between zones:" << endl;
+    cout << "Zone 0 and Zone 1 are " << (uf.areConnected(0, 1) ? "connected" : "not connected") << endl;
+    cout << "Zone 0 and Zone 2 are " << (uf.areConnected(0, 2) ? "connected" : "not connected") << endl;
+    cout << "Zone 0 and Zone 3 are " << (uf.areConnected(0, 3) ? "connected" : "not connected") << endl;
+    cout << "Zone 3 and Zone 5 are " << (uf.areConnected(3, 5) ? "connected" : "not connected") << endl;
+
+    return 0;
+}
+  </code></pre>
+
+</body>
+</html>
