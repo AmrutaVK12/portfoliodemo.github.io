@@ -1,176 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City Bus Network Optimization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=Merriweather:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.19/fullpage.min.css">
+  <style>
+    /* Base Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #2e4756; /* Aegean dark */
+      background-color: #f0f4f8; /* Aegean light */
+      scroll-behavior:smooth;
+    }
+
+    h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a5c7e; /* Aegean blue */
+      text-align: center;
+      margin-top: 30px;
+    }
+      h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a5c7e; /* Aegean blue */
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #2e4756;
+      text-align: left;
+    }
+
+    /* Background and Section Styling */
+    .section {
+      background-color: #ebf3f8; /* Aegean pale */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      scroll-snap-align:start;
+      scroll-snap-stop:always;
+    }
+
+    .section:nth-child(even) {
+      background-color: #d0e6f1; /* Aegean sky */
+    }
+
+    /* Content Styling */
+           .center-bar {
+            background-color:#588BAE; 
+            padding: 20px;
+            text-align: left;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 80%;
+            border-radius: 10px;
+        }
+        .center-bar h1 {
+            font-size: 28px;
+            color:  #1a5c7e;;
+            margin: 0;
+        }
+        .center-bar h2 {
+            font-size: 22px;
+            color: #1a5c7e;;
+            margin: 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content-section {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .content-section h1 {
+            font-size: 28px;
+            color:  #1a5c7e;
+            margin-bottom: 10px;
+        }
+        .content-section h2 {
+            font-size: 22px;
+            color:  #1a5c7e;
+            margin-top: 0;
+        }
+        .content-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .content-box {
+            flex: 1 1 45%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+        .content-box h2 {
+            font-size: 22px;
+            color:  #1a5c7e;
+            margin-bottom: 10px;
+        }
+        .content-box p {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+    /* Navigation Menu (Top) */
+    .top-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #588BAE; /* Aegean blue */
+      color: white;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 0;
+      z-index: 1000;
+    }
+
+    .top-menu button {
+      padding: 10px 20px;
+      background: #2e4756; /* Aegean dark */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .top-menu button:hover {
+      background: #1a5c7e; /* Slightly brighter Aegean */
+    }
+
+  /* Smooth Animations */
+      .animate-in {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 2s ease-out, transform 2s ease-out;
+    }
+
+    .animate-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
-    /* Reset default margin and padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* Global Styles */
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 20px; /* Adding padding to the body to prevent sticking at the top */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Aligns content towards the top */
-    min-height: 100vh;
-}
-
-/* Main Container */
-section {
-    background-color: white;
-    padding: 2rem;
-    width: 90%;
-    max-width: 800px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    text-align: center;
-    margin-top: 30px; /* Adding margin to ensure there's space from the top */
-}
-
-/* Header */
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-header h1 {
-    font-size: 2rem;
-    margin: 0;
-}
-
-header p {
-    margin: 1rem 0 0;
-}
-
-/* Section Titles */
-h2 {
-    color: #4CAF50;
-    margin-bottom: 1rem;
-}
-
-/* List Items */
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    background-color: #e7f7e7;
-    margin-bottom: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 5px;
-}
-
-/* Links */
-a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Definition List */
-dl dt {
-    font-weight: bold;
-    color: #333;
-    margin-top: 1rem;
-}
-
-dl dd {
-    margin-left: 1.5rem;
-    color: #666;
-}
-
-/* Blockquote */
-blockquote {
-    font-style: italic;
-    color: #555;
-    border-left: 4px solid #4CAF50;
-    padding-left: 1rem;
-    margin-top: 2rem;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    section {
-        padding: 1.5rem;
-    }
-
-    header {
-        padding: 1.5rem;
-    }
 <body>
-    <header>
-        <h1>Hello, I'm Amruta 👋</h1>
-        <p>I am passionate about technology and problem-solving. Here's a glimpse of my work:</p>
-    </header>
+  <div class="top-menu">
+    <button onclick="fullpage_api.moveTo(1)">Introduction</button> <button onclick="fullpage_api.moveTo(2)">About Course</button> <button onclick="fullpage_api.moveTo(3)">Course Project</button> <button onclick="fullpage_api.moveTo(4)">Team Assessment</button> <button onclick="fullpage_api.moveTo(5)">Learning Reflections</button>
+  </div>
+  <div id="fullpage">
+    <div class="section animate-in" id="intro">
+    <button onclick="fullpage_api.moveTo(1)">Introduction</button> <button onclick="fullpage_api.moveTo(2)">About Course</button> <button onclick="fullpage_api.moveTo(3)">Course Project</button> <button onclick="fullpage_api.moveTo(4)">Team Assessment</button> <button onclick="fullpage_api.moveTo(5)">Learning Reflections</button>
+      <h1>City Bus Network Optimization</h1>
+      <div class="content">
+        <p>Our project focuses on optimizing city bus networks to improve efficiency, reduce travel time, and minimize congestion using advanced algorithmic techniques. By leveraging graph algorithms (e.g., Dijkstra, Floyd-Warshall), we aim to determine the shortest routes, optimize bus stop placements, and balance passenger load across buses. Real-world examples include Google Maps route optimization and public transit systems like BMTC in Bangalore that use similar algorithms for route and scheduling efficiency.</p>
+      </div>
+    </div>
+    <div class="section animate-in" id="course-about">
+      <div id="COURSE_INTRODUCTION" class="center-bar"></div>
+      <h1>COURSE INTRODUCTION</h1>
+      <p>COURSE NAME: Algorithmic problem solving </p>
+      <p>COURSE CODE: 24ECSC205</p>
+      <h2>Instructor And University</h2>
+      <p>Instructor: Vijayalakshmi Sajjanar</p>
+      <p>University: KLE Technological University Hubli</p>
+      <div class="content-row">
+        <div class="content-box">
+          <h2>What is the course about?</h2>
+          <p>The Design and Analysis of Algorithms course is all about developing a deep understanding of how algorithms work, how they are designed, and how they can be optimized for efficiency. This course emphasizes:</p>
+          <p>- The systematic design of algorithms.<br>
+          - The analysis of their time and space complexities.<br>
+          - The application of mathematical tools to compare algorithm performance.</p>
+          <p>By studying this, I have gained the skills to approach problems systematically, design solutions, and measure their efficiency.</p>
+        </div>
+      </div>
+    </div>
 
-    <section>
-        <h2>🛠 Projects</h2>
-        <ul>
-            <li><strong>Project 1</strong>: Engineering Exploration- Electronic components cutting bot.</li>
-            <li><strong>Project 2</strong>: DTSI- Smart gloves for deaf and dumb.</li>
-        </ul>
+        <h1>CONNECTION WITH REAL WORLD</h1>
+        <h2>What kind of data structures and algorithms have I studied?</h2>
+        <p>During the course, I explored a variety of data structures and algorithms, including:</p>
+        <p><strong>Data Structures:</strong> Arrays, Linked Lists, Stacks, Queues, Trees, Graphs, Hash Tables.</p>
+        <p><strong>Algorithms:</strong> Sorting algorithms like Merge Sort and Quick Sort, graph algorithms like Dijkstra’s and Kruskal’s, and advanced string matching algorithms like Rabin-Karp and Boyer-Moore.</p>
+        <p>Each topic built upon the foundational knowledge, helping me to analyze problems from different perspectives and apply the most suitable data structure or algorithm.</p>
 
-        <h2>🚀 Skills</h2>
-        <ul>
-            <li>C++, Python, C </li>
-            <li>Data Structures and Algorithms</li>
-            <li>SQL </li>
-        </ul>
-
-        <h2>🌐 Find Me Online</h2>
-        <ul>
-            
-            <li><a href="https://linkedin.com/in/your-linkedin-profile" target="_blank">LinkedIn</a></li>
-        </ul>
-
-        <h2>Portfolio Topic</h2>
-        <dl>
-            <dt>Course Name</dt>
-            <dd>Algorithmic Problem Solving</dd>
-
-            <dt>Course Code</dt>
-            <dd>24ECAC203</dd>
-
-            <dt>Name</dt>
-            <dd>Amruta K</dd>
-
-            <dt>SRN</dt>
-            <dd>01FE23BCS074</dd>
-
-            <dt>Course Instructor</dt>
-            <dd>Mallikarjun Akki</dd>
-
-            <dt>University</dt>
-            <dd>KLE Technological University</dd>
-
-            <dt>Portfolio Topic/Domain</dt>
-            <dd>Google</dd>
-        </dl>
-
-              <a href="learning.html">Course Learning Reflection</a>
-
-
-        
-        <blockquote>“The only way to do great work is to love what you do.” – Steve Jobs</blockquote>
-    </section>
-</body>
-</html>
+      <div class="content-section" id="importance-overview"></div>
+         <div class="section animate-in" id="importance-details"></div>
+          <h1>Why is this course important?</h1>
+          <p>This course is a stepping stone for anyone aspiring to excel in fields like software engineering, competitive programming, and machine learning. It lays the foundation for efficient problem-solving, a skill crucial in today’s fast-paced technological world. Through this learning portfolio, I aim to demonstrate my understanding and enthusiasm for algorithms and data structures, reflecting on how they shape the software and tools we use daily.</p>
+          <section>
+            <h3>Course Reflections</h3>
+            <h4>1. What are the kinds of problems we see in nature? (Iteration, Recursion, Backtracking)</h4>
+            <p><strong>Iteration</strong></p>
+            <ul>
+              <li>Traveling to college every day (repeated routine)</li>
+              <li>Playing the game of chess (turn-based sequences)</li>
+              <li>Preparing for an assembly (step-by-step organization)</li>
+              <li>The process of learning (daily practice and effort)</li>
+              <li>Resource management at a wedding (iterative allocation of resources)</li>
+            </ul>
+            <p><strong>Recursion</strong></p>
+            <ul>
+              <li>The tree that has been growing every day (branches resembling the whole tree structure)</li>
+              <li>The growth of cauliflower vegetables (fractal patterns)</li>
+              <li>Matryoshka dolls (nested structure with self-similarity)</li>
+              <li>A calendar (days, weeks, and months recur in predictable patterns)</li>
+            </ul>
+            <p><strong>Backtracking</strong></p>
+            <ul>
+              <li>Searching for a new friend’s location (exploring different paths or strategies)</li>
+              <li>Solving Sudoku (backtracking to correct mistakes)</li>
+              <li>The placement of objects (optimizing arrangements by trying alternatives)</li>
+            </ul>
+          </section>
+          <section>
+            <h2>2. What is Space and Time Efficiency? Why Are They Important?</h2>
+            <h3>Algorithm Efficiency and Complexity</h3>
+            <p><strong>Time Efficiency:</strong> Measures the computational time required to execute an algorithm and represents the number of basic operations performed by an algorithm.</p>
+            <p><strong>Space Efficiency:</strong> Measures the memory (storage) required by an algorithm, tracking how much memory is consumed by the input size and determining how much additional memory is needed to solve a problem.</p>
+            <h4>Key Principles:</h4>
+            <ul>
+              <li>A good algorithm executes quickly and saves space in the process.</li>
+              <li>We should find a balance between space and time efficiency (space and time complexity).</li>
+            </ul>
+            <p>In the world of computer science, to perform better, we need to write algorithms that are time-efficient and use less memory. Algorithms should be resource-optimized, solving larger problems with limited computing power, and improving user experience and system performance.</p>
+            <h4>Different Classes of Problems and Orders of Growth:</h4>
+              <table border="1">
+              <thead>
+                <tr>
+                  <th>Order of Growth</th>
+                  <th>Performance Description</th>
+                  <th>Example Complexity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>O(1) - Constant Time</td>
+                  <td>Performance is independent of input size.</td>
+                  <td>Accessing a specific element in an array</td>
+                </tr>
+                <tr>
+                  <td>O(log n) - Logarithmic Time</td>
+                  <td>Performance grows logarithmically with input size.</td>
+                  <td>Binary search</td>
+                </tr>
+                <tr>
+                  <td>O(n) - Linear Time</td>
+                  <td>Performance grows proportionally with input size.</td>
+                  <td>Linear search</td>
+                </tr>
+                <tr>
+                  <td>O(n<sup>2</sup>) - Quadratic Time</td>
+                  <td>Performance grows with the square of the input size.</td>
+                  <td>Bubble sort, insertion sort</td>
+                </tr>
+                <tr>
+                  <td>O(2<sup>n</sup>) - Exponential Time</td>
+                  <td>Performance doubles with each addition to the input size.</td>
+                  <td>Solving the Travelling Salesman Problem using brute force</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h2>3. Takeaway from Different Design Principles from Chapter 2</h2>
+            <p><strong>Decomposition:</strong> Break complex problems into smaller, manageable pieces to simplify and solve them effectively.</p>
+            <p><strong>Pattern Recognition:</strong> Identify recurring patterns in problems to generalize solutions and make predictions.</p>
+            <p><strong>Abstraction:</strong> Focus on essential features and ignore unnecessary details to simplify problem-solving.</p>
+            <p><strong>Brave vs. Cautious Traversal:</strong></p>
+            <ul>
+              <li><strong>DFS (Brave):</strong> Explore deeply before backtracking.</li>
+              <li><strong>BFS (Cautious):</strong> Explore level by level.</li>
+            </ul>
+            <p><strong>Pruning:</strong> Skip unnecessary paths to save time and resources (e.g., N-Queen’s problem).</p>
+            <p><strong>Lazy Propagation:</strong> Delay updates in data structures like segment trees for efficiency, especially with large datasets.</p>
+            <p><strong>Sliding Window:</strong> Efficiently analyze overlapping sub-arrays, useful for tasks like finding maximum sums.</p>
+            <p><strong>Level Order Traversal:</strong> Explore tree nodes level by level (similar to BFS).</p>
+            <p><strong>Hierarchical Data:</strong> Use parent-child relationships (e.g., family trees) to organize and manage information.</p>
+            <p><strong>Edge Relaxation:</strong> Update shortest paths in algorithms like Dijkstra’s by rechecking neighboring paths.</p>
+            <p><strong>Balancing and Rotations:</strong> Prevent unbalanced trees in AVL and Red-Black trees to maintain efficient operations.</p>
+            <p><strong>Kleene Closure:</strong> Find relationships in graphs and determine all possible connections (transitive closure).</p>
+            <p><strong>Pre-Computing:</strong> Calculate and store frequently needed results in advance to save runtime (e.g., lookup tables).</p>
+            <p><strong>Parental Dominance:</strong> Maintain efficiency in heaps by ensuring the root is the largest or smallest element.</p>
+            <p><strong>Prefix and Suffix:</strong> Key for pattern matching and string operations in tasks like searching and bioinformatics.</p>
+            <p><strong>Partitioning:</strong> Divide problems into smaller parts for recursion, widely used in sorting and searching.</p>
+            <p><strong>Bit Manipulations:</strong> Use operations like AND, OR, XOR for memory-efficient algorithms (e.g., Fenwick trees).</p>
+            <p><strong>Memoization:</strong> Store previous results in recursive algorithms to avoid redundant calculations.</p>
+            <p><strong>Invariants:</strong> Conditions that stay constant during execution, ensuring correctness (e.g., maintaining sorted order).</p>
+            <p><strong>Shortest Path Trees:</strong> Show shortest routes from a starting node, useful for navigation and network optimization.</p>
+          </section>
+          <section>
+            <h4>4. Hierarchical data and how different tree data structures solve and optimize problems</h4>
+            <table border="2">
+              <thead>
+                <tr>
+                  <th>Tree Type</th>
+                  <th>Best For</th>
+                  <th>Strength</th>
+                  <th>Limitation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>BST</td>
+                  <td>Sorted data with moderate updates</td>
+                  <td>Simple structure</td>
+                  <td>Can become unbalanced</td>
+                </tr>
+                <tr>
+                  <td>AVL Tree</td>
+                  <td>Frequent lookups and moderate insertions/deletions</td>
+                  <td>Guarantees balance</td>
+                  <td>Costly rotations</td>
+                </tr>
+                <tr>
+                  <td>2-3 Tree</td>
+                  <td>Predictable performance in all operations</td>
+                  <td>Consistent height</td>
+                  <td>Complexity of implementation</td>
+                </tr>
+                <tr>
+                  <td>Red-Black Tree</td>
+                  <td>Dynamic datasets with frequent updates</td>
+                  <td>Fewer rotations than AVL</td>
+                  <td>Slightly less balanced than AVL</td>
+                </tr>
+                <tr>
+                  <td>Heap</td>
+                  <td>Priority-based operations</td>
+                  <td>Efficient min/max retrieval</td>
+                  <td>Not suited for general searching</td>
+                </tr>
+                <tr>
+                  <td>Trie</td>
+                  <td>String data and prefix-based operations</td>
+                  <td>Fast prefix search</td>
+                  <td>High memory usage for sparse data</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h4>5. The need of array query algorithms and their implications</h4>
+            <p><strong>Principles of Array Query Algorithms</strong></p>
+            <ul>
+              <li><strong>Divide and Conquer:</strong> Breaking queries into smaller subproblems for efficient computation.</li>
+              <li><strong>Dynamic Programming:</strong> Storing intermediate results to avoid redundant calculations.</li>
+              <li><strong>Optimization:</strong> Balancing preprocessing time with query time to achieve overall efficiency.</li>
+            </ul>
+            <p><strong>Array Query Algorithms: Overview</strong></p>
+            <p><strong>Core Purpose:</strong> Array query algorithms are designed to efficiently retrieve, manipulate, or analyze information within large datasets, addressing challenges of:</p>
+            <ul>
+              <li>Fast information retrieval</li>
+              <li>Complex data processing</li>
+              <li>Minimizing computational complexity</li>
+            </ul>
+            <p><strong>Binary Search (Binary Index Tree):</strong></p>
+            <ul>
+              <li><strong>Principle:</strong> Divide and conquer strategy</li>
+              <li><strong>Efficiency:</strong> O(log n)</li>
+              <li><strong>Requirements:</strong> Sorted array</li>
+              <li><strong>Applications:</strong> Used in large sorted databases</li>
+            </ul>
+            <p><strong>Sliding Window Technique:</strong></p>
+            <ul>
+              <li><strong>Principle:</strong> Maintain a window of elements</li>
+              <li><strong>Efficiency:</strong> O(n)</li>
+              <li><strong>Applications:</strong> Used in network traffic analysis and signal processing</li>
+            </ul>
+            <p><strong>Segment Tree:</strong></p>
+            <ul>
+              <li><strong>Principle:</strong> Divide array into segments</li>
+              <li><strong>Efficiency:</strong> O(log n)</li>
+              <li><strong>Applications:</strong> Range min/max queries</li>
+            </ul>
+          </section>
+          <section>
+            <h4>6. Trees and graphs and their traversals</h4>
+            <p><strong>Differentiating Trees and Graphs:</strong></p>
+            <ul>
+              <li><strong>Tree:</strong> A simple structure with one main "root" and branches that don’t loop back (no cycles). It is like a family tree where each person has only one parent (except for the root). Example: A folder structure on your computer.</li>
+              <li><strong>Graph:</strong> A graph is more comp
