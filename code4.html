@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Case Code Examples</title>
+</head>
+<body>
+
+  <h1>4: </h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+using namespace std;
+
+struct Edge {
+    int to;
+    int weight;
+};
+
+struct Compare {
+    bool operator()(const pair<int, int>& a, const pair<int, int>& b) {
+        return a.second > b.second;  // Priority queue: smallest weight first
+    }
+};
+
+class UtilityNetwork {
+public:
+    vector<vector<Edge>> adjList;
+    int n;  // Number of nodes in the graph
+
+    UtilityNetwork(int nodes) {
+        n = nodes;
+        adjList.resize(n);
+    }
+
+    // Add an undirected edge to the graph (both directions)
+    void addEdge(int u, int v, int weight) {
+        adjList[u].push_back({v, weight});
+        adjList[v].push_back({u, weight});
+    }
+
+    // Prim's algorithm to find the MST starting from the source node
+    int primMST(int source) {
+        vector<int> key(n, INT_MAX);  // Minimum weight to connect to MST
+        vector<bool> inMST(n, false); // Track which nodes are in the MST
+        priority_queue<pair<int, int>, vector<pair<int, int>>, Compare> pq;  // Min-heap to pick the minimum weight edge
+
+        // Initialize the source node
+        pq.push({source, 0});
+        key[source] = 0;
+        int mstWeight = 0;
+
+        while (!pq.empty()) {
+            // Get the node with the minimum key value
+            int u = pq.top().first;
+            pq.pop();
+
+            if (inMST[u]) continue;  // Skip nodes already included in the MST
+
+            // Include node u in the MST
+            inMST[u] = true;
+            mstWeight += key[u];  // Add the weight of the node to the MST's total weight
+
+            // Update the adjacent nodes
+            for (auto& edge : adjList[u]) {
+                int v = edge.to;
+                int weight = edge.weight;
+
+                // If the node v is not in the MST and the edge weight is smaller than the current key value, update it
+                if (!inMST[v] && weight < key[v]) {
+                    key[v] = weight;
+                    pq.push({v, key[v]});
+                }
+            }
+        }
+        return mstWeight;  // Return the total weight of the MST
+    }
+};
+
+int main() {
+    // Example: Utility Network with 6 nodes (key buildings) and weighted edges (distances or costs)
+    int numNodes = 6;
+    UtilityNetwork network(numNodes);
+
+    // Add edges: (u, v, weight)
+    network.addEdge(0, 1, 4);
+    network.addEdge(0, 2, 3);
+    network.addEdge(1, 2, 1);
+    network.addEdge(1, 3, 2);
+    network.addEdge(2, 3, 4);
+    network.addEdge(3, 4, 2);
+    network.addEdge(4, 5, 6);
+    network.addEdge(3, 5, 3);
+
+    // Source node (e.g., power station or water plant)
+    int source = 0;
+
+    // Compute the MST starting from the source node
+    int mstWeight = network.primMST(source);
+
+    // Output the total weight of the MST (minimum cost to connect all buildings)
+    cout << "Total weight of the Minimum Spanning Tree (MST) is: " << mstWeight << endl;
+
+    return 0;
+}
+
+
+  </code></pre>
+
+  <h1>6:</h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to heapify a subtree rooted at index i
+void heapify(vector<pair<int, string>>& emergencies, int n, int i) {
+    int largest = i; // Initialize largest as root
+    int left = 2 * i + 1; // Left child
+    int right = 2 * i + 2; // Right child
+
+    // If left child is larger than root
+    if (left < n && emergencies[left].first > emergencies[largest].first)
+        largest = left;
+
+    // If right child is larger than largest so far
+    if (right < n && emergencies[right].first > emergencies[largest].first)
+        largest = right;
+
+    // If largest is not root, swap and recursively heapify the affected subtree
+    if (largest != i) {
+        swap(emergencies[i], emergencies[largest]);
+        heapify(emergencies, n, largest);
+    }
+}
+
+// Function to perform heap sort on the emergency list
+void heapSort(vector<pair<int, string>>& emergencies) {
+    int n = emergencies.size();
+
+    // Build a max-heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(emergencies, n, i);
+
+    // One by one extract elements from the heap
+    for (int i = n - 1; i >= 0; i--) {
+        // Move the current root to the end
+        swap(emergencies[0], emergencies[i]);
+
+        // Call heapify on the reduced heap
+        heapify(emergencies, i, 0);
+    }
+}
+
+int main() {
+    // Example list of emergencies with priorities
+    vector<pair<int, string>> emergencies = {
+        {5, "Fire at Hospital"},
+        {3, "Car accident"},
+        {8, "Flood"},
+        {2, "Minor injury"},
+        {7, "Earthquake"},
+        {4, "Chemical spill"}
+    };
+
+    // Perform heap sort to prioritize emergencies
+    heapSort(emergencies);
+
+    // Display sorted emergencies by priority
+    cout << "Emergency response sorted by priority (highest to lowest):" << endl;
+    for (const auto& emergency : emergencies) {
+        cout << "Priority: " << emergency.first << " | Emergency: " << emergency.second << endl;
+    }
+
+    return 0;
+}
+  </code></pre>
+
+</body>
+</html>
