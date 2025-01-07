@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Business Case Code Examples</title>
+</head>
+<body>
+
+  <h1>Case 1:</h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+typedef pair<int, int> pii; // Pair of (distance, node)
+
+// Dijkstra's algorithm to find the shortest path from start to target
+int dijkstra(const vector<vector<pii>>& graph, int start, int target) {
+    int n = graph.size();
+
+    // Create a distance array and set all distances to infinity
+    vector<int> dist(n, INT_MAX);
+    dist[start] = 0;
+
+    // Min-heap priority queue: stores pairs of (distance, node)
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    pq.push({0, start}); // Push the start node with distance 0
+
+    while (!pq.empty()) {
+        int current_distance = pq.top().first;
+        int current_node = pq.top().second;
+        pq.pop();
+
+        // If we reached the target, return the current distance
+        if (current_node == target) {
+            return current_distance;
+        }
+
+        // If a node's distance is greater than the current known shortest, skip it
+        if (current_distance > dist[current_node]) {
+            continue;
+        }
+
+        // Explore the neighbors of the current node
+        for (auto& neighbor : graph[current_node]) {
+            int neighbor_node = neighbor.first;
+            int weight = neighbor.second;
+
+            int new_distance = current_distance + weight;
+
+            // If a shorter path is found, update the distance and push to the priority queue
+            if (new_distance < dist[neighbor_node]) {
+                dist[neighbor_node] = new_distance;
+                pq.push({new_distance, neighbor_node});
+            }
+        }
+    }
+
+    // If there's no path to the target, return -1 or some indicator
+    return -1;
+}
+
+void testCase(const vector<vector<pii>>& graph, int start, int target) {
+    int shortest_distance = dijkstra(graph, start, target);
+
+    if (shortest_distance == -1) {
+        cout << "No path found from node " << start << " to node " << target << "." << endl;
+    } else {
+        cout << "Shortest distance from node " << start << " to node " << target << " is: " << shortest_distance << endl;
+    }
+    cout << endl;
+}
+
+int main() {
+    // Test Case 1: A graph with a valid path
+    cout << "Test Case 1: Valid path graph" << endl;
+    vector<vector<pii>> graph1 = {
+        {{1, 10}, {2, 1}}, // node 0
+        {{0, 10}, {2, 5}}, // node 1
+        {{0, 1}, {1, 5}}   // node 2
+    };
+    testCase(graph1, 0, 1); // Expected: 6
+
+    // Test Case 2: A graph where no path exists
+    cout << "Test Case 2: No path between nodes" << endl;
+    vector<vector<pii>> graph2 = {
+        {{1, 10}},          // node 0
+        {{0, 10}}           // node 1
+    };
+    testCase(graph2, 0, 2); // Expected: No path found
+
+    // Test Case 3: Same start and target node
+    cout << "Test Case 3: Same start and target" << endl;
+    vector<vector<pii>> graph3 = {
+        {{1, 10}, {2, 1}}, // node 0
+        {{0, 10}, {2, 5}}, // node 1
+        {{0, 1}, {1, 5}}   // node 2
+    };
+    testCase(graph3, 0, 0); // Expected: 0 (same start and target)
+
+    // Test Case 4: A graph with multiple possible paths
+    cout << "Test Case 4: Multiple paths" << endl;
+    vector<vector<pii>> graph4 = {
+        {{1, 10}, {2, 3}},   // node 0
+        {{0, 10}, {3, 2}},   // node 1
+        {{0, 3}, {3, 8}},    // node 2
+        {{1, 2}, {2, 8}}     // node 3
+    };
+    testCase(graph4, 0, 3); // Expected: 5 (via node 1)
+
+    // Test Case 5: A large graph with many nodes (for performance)
+    cout << "Test Case 5: Large graph (performance test)" << endl;
+    vector<vector<pii>> graph5(1000);
+    for (int i = 0; i < 999; ++i) {
+        graph5[i].push_back({i + 1, 1});
+        graph5[i + 1].push_back({i, 1});
+    }
+    testCase(graph5, 0, 999); // Expected: 999 (path from 0 to 999 with distance 999)
+
+    return 0;
+}
+
+  </code></pre>
+
+  <h1>Case 5:</h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+typedef pair<int, int> pii; // Pair of (distance, node)
+
+// Dijkstra's algorithm to find the shortest path from start to target
+int dijkstra(const vector<vector<pii>>& graph, int start, int target) {
+    int n = graph.size();
+
+    // Create a distance array and set all distances to infinity
+    vector<int> dist(n, INT_MAX);
+    dist[start] = 0;
+
+    // Min-heap priority queue: stores pairs of (distance, node)
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    pq.push({0, start}); // Push the start node with distance 0
+
+    while (!pq.empty()) {
+        int current_distance = pq.top().first;
+        int current_node = pq.top().second;
+        pq.pop();
+
+        // If we reached the target, return the current distance
+        if (current_node == target) {
+            return current_distance;
+        }
+
+        // If a node's distance is greater than the current known shortest, skip it
+        if (current_distance > dist[current_node]) {
+            continue;
+        }
+
+        // Explore the neighbors of the current node
+        for (auto& neighbor : graph[current_node]) {
+            int neighbor_node = neighbor.first;
+            int weight = neighbor.second;
+
+            int new_distance = current_distance + weight;
+
+            // If a shorter path is found, update the distance and push to the priority queue
+            if (new_distance < dist[neighbor_node]) {
+                dist[neighbor_node] = new_distance;
+                pq.push({new_distance, neighbor_node});
+            }
+        }
+    }
+
+    // If there's no path to the target, return -1 or some indicator
+    return -1;
+}
+
+void testCase(const vector<vector<pii>>& graph, int start, int target) {
+    int shortest_distance = dijkstra(graph, start, target);
+
+    if (shortest_distance == -1) {
+        cout << "No path found from node " << start << " to node " << target << "." << endl;
+    } else {
+        cout << "Shortest distance from node " << start << " to node " << target << " is: " << shortest_distance << endl;
+    }
+    cout << endl;
+}
+
+int main() {
+    // Test Case 1: A graph with a valid path
+    cout << "Test Case 1: Valid path graph" << endl;
+    vector<vector<pii>> graph1 = {
+        {{1, 10}, {2, 1}}, // node 0
+        {{0, 10}, {2, 5}}, // node 1
+        {{0, 1}, {1, 5}}   // node 2
+    };
+    testCase(graph1, 0, 1); // Expected: 6
+
+    // Test Case 2: A graph where no path exists
+    cout << "Test Case 2: No path between nodes" << endl;
+    vector<vector<pii>> graph2 = {
+        {{1, 10}},          // node 0
+        {{0, 10}}           // node 1
+    };
+    testCase(graph2, 0, 2); // Expected: No path found
+
+    // Test Case 3: Same start and target node
+    cout << "Test Case 3: Same start and target" << endl;
+    vector<vector<pii>> graph3 = {
+        {{1, 10}, {2, 1}}, // node 0
+        {{0, 10}, {2, 5}}, // node 1
+        {{0, 1}, {1, 5}}   // node 2
+    };
+    testCase(graph3, 0, 0); // Expected: 0 (same start and target)
+
+    // Test Case 4: A graph with multiple possible paths
+    cout << "Test Case 4: Multiple paths" << endl;
+    vector<vector<pii>> graph4 = {
+        {{1, 10}, {2, 3}},   // node 0
+        {{0, 10}, {3, 2}},   // node 1
+        {{0, 3}, {3, 8}},    // node 2
+        {{1, 2}, {2, 8}}     // node 3
+    };
+    testCase(graph4, 0, 3); // Expected: 5 (via node 1)
+
+    // Test Case 5: A large graph with many nodes (for performance)
+    cout << "Test Case 5: Large graph (performance test)" << endl;
+    vector<vector<pii>> graph5(1000);
+    for (int i = 0; i < 999; ++i) {
+        graph5[i].push_back({i + 1, 1});
+        graph5[i + 1].push_back({i, 1});
+    }
+    testCase(graph5, 0, 999); // Expected: 999 (path from 0 to 999 with distance 999)
+
+    return 0;
+}
+
+  </code></pre>
+
+</body>
+</html>
