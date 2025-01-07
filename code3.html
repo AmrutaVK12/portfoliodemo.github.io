@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Case Code Examples</title>
+</head>
+<body>
+
+  <h1>Case 3: </h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+// Edge structure to store the edges
+struct Edge {
+    int u, v, weight; // u and v are the nodes, weight is the cost of the edge
+};
+
+// Disjoint-Set Union (DSU) or Union-Find Data Structure
+class DSU {
+public:
+    vector<int> parent, rank;
+
+    DSU(int n) {
+        parent.resize(n);
+        rank.resize(n, 0);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i; // initially, each node is its own parent
+        }
+    }
+
+    // Find the representative of the set containing 'x'
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]); // Path compression
+        return parent[x];
+    }
+
+    // Union of two sets
+    void unionSets(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX != rootY) {
+            // Union by rank to keep the tree flat
+            if (rank[rootX] > rank[rootY]) {
+                parent[rootY] = rootX;
+            } else if (rank[rootX] < rank[rootY]) {
+                parent[rootX] = rootY;
+            } else {
+                parent[rootY] = rootX;
+                rank[rootX]++;
+            }
+        }
+    }
+};
+
+// Kruskal's algorithm to find the Minimum Spanning Tree (MST)
+int kruskal(int n, vector<Edge>& edges) {
+    // Sort edges based on weight
+    sort(edges.begin(), edges.end(), [](Edge a, Edge b) {
+        return a.weight < b.weight;
+    });
+
+    DSU dsu(n); // Create a DSU for 'n' nodes
+    int mstWeight = 0;
+    vector<Edge> mstEdges;
+
+    // Process each edge in sorted order
+    for (auto& edge : edges) {
+        int u = edge.u;
+        int v = edge.v;
+        int weight = edge.weight;
+
+        // If u and v are not connected, add this edge to the MST
+        if (dsu.find(u) != dsu.find(v)) {
+            dsu.unionSets(u, v);
+            mstWeight += weight;
+            mstEdges.push_back(edge);
+        }
+    }
+
+    // Print the edges in the MST
+    cout << "Edges in the Minimum Spanning Tree:\n";
+    for (auto& edge : mstEdges) {
+        cout << "Edge: " << edge.u << " - " << edge.v << " with weight " << edge.weight << endl;
+    }
+
+    return mstWeight;
+}
+
+int main() {
+    // Test Case 1: Simple graph with 4 nodes
+    cout << "Test Case 1: Simple graph with 4 nodes\n";
+    vector<Edge> edges1 = {
+        {0, 1, 10},
+        {0, 2, 6},
+        {0, 3, 5},
+        {1, 3, 15},
+        {2, 3, 4}
+    };
+    int numNodes1 = 4;
+    int mstWeight1 = kruskal(numNodes1, edges1);
+    cout << "Total weight of MST: " << mstWeight1 << endl;
+
+    // Test Case 2: Graph with more complex connectivity
+    cout << "\nTest Case 2: Graph with more complex connectivity\n";
+    vector<Edge> edges2 = {
+        {0, 1, 4},
+        {0, 2, 1},
+        {1, 2, 2},
+        {1, 3, 5},
+        {2, 3, 8},
+        {3, 4, 3},
+        {2, 4, 6}
+    };
+    int numNodes2 = 5;
+    int mstWeight2 = kruskal(numNodes2, edges2);
+    cout << "Total weight of MST: " << mstWeight2 << endl;
+
+    // Test Case 3: Large graph
+    cout << "\nTest Case 3: Large graph (performance test)\n";
+    vector<Edge> edges3;
+    int numNodes3 = 1000;
+    // Create a graph where every node is connected to the next node with weight 1
+    for (int i = 0; i < 999; i++) {
+        edges3.push_back({i, i + 1, 1});
+    }
+    int mstWeight3 = kruskal(numNodes3, edges3);
+    cout << "Total weight of MST: " << mstWeight3 << endl;
+
+    return 0;
+}
+
+
+  </code></pre>
+
+  <h1>Case 6:</h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to heapify a subtree rooted at index i
+void heapify(vector<pair<int, string>>& emergencies, int n, int i) {
+    int largest = i; // Initialize largest as root
+    int left = 2 * i + 1; // Left child
+    int right = 2 * i + 2; // Right child
+
+    // If left child is larger than root
+    if (left < n && emergencies[left].first > emergencies[largest].first)
+        largest = left;
+
+    // If right child is larger than largest so far
+    if (right < n && emergencies[right].first > emergencies[largest].first)
+        largest = right;
+
+    // If largest is not root, swap and recursively heapify the affected subtree
+    if (largest != i) {
+        swap(emergencies[i], emergencies[largest]);
+        heapify(emergencies, n, largest);
+    }
+}
+
+// Function to perform heap sort on the emergency list
+void heapSort(vector<pair<int, string>>& emergencies) {
+    int n = emergencies.size();
+
+    // Build a max-heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(emergencies, n, i);
+
+    // One by one extract elements from the heap
+    for (int i = n - 1; i >= 0; i--) {
+        // Move the current root to the end
+        swap(emergencies[0], emergencies[i]);
+
+        // Call heapify on the reduced heap
+        heapify(emergencies, i, 0);
+    }
+}
+
+int main() {
+    // Example list of emergencies with priorities
+    vector<pair<int, string>> emergencies = {
+        {5, "Fire at Hospital"},
+        {3, "Car accident"},
+        {8, "Flood"},
+        {2, "Minor injury"},
+        {7, "Earthquake"},
+        {4, "Chemical spill"}
+    };
+
+    // Perform heap sort to prioritize emergencies
+    heapSort(emergencies);
+
+    // Display sorted emergencies by priority
+    cout << "Emergency response sorted by priority (highest to lowest):" << endl;
+    for (const auto& emergency : emergencies) {
+        cout << "Priority: " << emergency.first << " | Emergency: " << emergency.second << endl;
+    }
+
+    return 0;
+}
+
+  </code></pre>
+
+</body>
+</html>
