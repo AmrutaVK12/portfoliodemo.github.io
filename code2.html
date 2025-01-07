@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Case Code Examples</title>
+</head>
+<body>
+
+  <h1>Case 2: </h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+// Directions for moving in 4 possible directions (up, down, left, right)
+const int directions[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+// Structure to represent a cell in the grid
+struct Cell {
+    int x, y, distance; // Coordinates and distance from start
+};
+
+// BFS to explore the grid and calculate the area within distance limit
+void bfsAreaCoverage(vector<vector<int>>& grid, int startX, int startY, int distanceLimit) {
+    int rows = grid.size();
+    int cols = grid[0].size();
+
+    // Create a visited array to keep track of visited cells
+    vector<vector<bool>> visited(rows, vector<bool>(cols, false));
+
+    // Initialize the queue for BFS
+    queue<Cell> q;
+    q.push({startX, startY, 0}); // Start from the emergency station with distance 0
+    visited[startX][startY] = true;
+
+    cout << "Area covered within distance " << distanceLimit << ":\n";
+
+    while (!q.empty()) {
+        Cell current = q.front();
+        q.pop();
+
+        // If the current distance exceeds the limit, stop exploring further
+        if (current.distance > distanceLimit) {
+            continue;
+        }
+
+        // Print the coordinates of the current cell (the area covered)
+        cout << "Cell (" << current.x << ", " << current.y << ") at distance " << current.distance << endl;
+
+        // Explore the 4 possible neighbors (up, down, left, right)
+        for (const auto& dir : directions) {
+            int newX = current.x + dir[0];
+            int newY = current.y + dir[1];
+
+            // Check if the new cell is within bounds and not visited
+            if (newX >= 0 && newX < rows && newY >= 0 && newY < cols && !visited[newX][newY]) {
+                visited[newX][newY] = true;
+                q.push({newX, newY, current.distance + 1}); // Increment the distance
+            }
+        }
+    }
+}
+
+int main() {
+    // Define a grid (map) with the emergency station at (1, 1)
+    // 0 represents a free area, 1 could represent an obstacle (not passable)
+    vector<vector<int>> grid = {
+        {0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0},
+        {0, 1, 0, 1, 0},
+        {0, 0, 0, 0, 0}
+    };
+
+    // Starting point (emergency station)
+    int startX = 1;
+    int startY = 1;
+
+    // Maximum distance limit
+    int distanceLimit = 3;
+
+    // Call BFS to find the area covered within the distance limit
+    bfsAreaCoverage(grid, startX, startY, distanceLimit);
+
+    return 0;
+}
+
+
+  </code></pre>
+
+  <h1>Case 5: </h1>
+  <pre><code>
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+class SafeZoneIdentification {
+public:
+    vector<vector<int>> adjList;
+    vector<bool> visited;
+    int n; // Number of zones (nodes)
+
+    SafeZoneIdentification(int nodes) {
+        n = nodes;
+        adjList.resize(n);
+        visited.resize(n, false);
+    }
+
+    // Add an undirected edge between two zones
+    void addEdge(int u, int v) {
+        adjList[u].push_back(v);
+        adjList[v].push_back(u);
+    }
+
+    // DFS to explore all reachable zones from the source zone
+    void DFS(int start) {
+        stack<int> s;
+        s.push(start);
+        visited[start] = true;
+
+        while (!s.empty()) {
+            int node = s.top();
+            s.pop();
+            // Explore all the neighbors of the current node
+            for (int neighbor : adjList[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    s.push(neighbor);
+                }
+            }
+        }
+    }
+
+    // Identify isolated or hidden zones after DFS
+    void identifySafeZones(int start) {
+        // Perform DFS from the source zone
+        DFS(start);
+
+        // Check for isolated zones that were not visited
+        cout << "Safe zones (accessible from source zone " << start << "):" << endl;
+        for (int i = 0; i < n; ++i) {
+            if (visited[i]) {
+                cout << "Zone " << i << " is safe." << endl;
+            }
+        }
+
+        cout << "\nIsolated zones (not accessible from the source zone):" << endl;
+        for (int i = 0; i < n; ++i) {
+            if (!visited[i]) {
+                cout << "Zone " << i << " is isolated." << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    // Example: Safe Zone Identification for a 7-zone area
+    int numZones = 7;  // Increased to accommodate Zone 6
+    SafeZoneIdentification network(numZones);
+
+    // Add edges between zones (representing accessible paths)
+    network.addEdge(0, 1);
+    network.addEdge(0, 2);
+    network.addEdge(1, 3);
+    network.addEdge(3, 4);
+    network.addEdge(4, 5);
+
+    // Zone 6 is isolated (no edges)
+
+    // Source zone (e.g., emergency station at zone 0)
+    int sourceZone = 0;
+
+    // Identify accessible (safe) and isolated zones
+    network.identifySafeZones(sourceZone);
+
+    return 0;
+}
+  </code></pre>
+
+</body>
+</html>
